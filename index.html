@@ -6,133 +6,62 @@
 <style>
 :root{--ink:#10120f;--muted:#686d65;--line:#e5e8e1;--green:#9ad64d;--bg:#f7f8f4}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg)}
-.hero{background:#10120f;color:#fff;padding:34px 18px}.wrap{max-width:1100px;margin:auto}.eyebrow{font-size:11px;letter-spacing:2px;color:#b8ec74;font-weight:700}
-h1{margin:8px 0 8px;font-size:34px}.hero p{color:#c8cdc4;max-width:680px;line-height:1.5}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid #343831;border-radius:999px;padding:8px 12px;font-size:12px}
+.hero{background:#10120f;color:#fff;padding:26px 18px 30px}.wrap{max-width:1100px;margin:auto}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{font-size:11px;letter-spacing:2px;color:#b8ec74;font-weight:700}
+.lang{display:flex;gap:5px;background:#242721;padding:4px;border-radius:999px}.lang button{border:0;background:transparent;color:#cdd2c8;padding:7px 10px;border-radius:999px;font-weight:700}.lang button.on{background:#fff;color:#111}
+h1{margin:9px 0 8px;font-size:34px}.hero p{color:#c8cdc4;max-width:680px;line-height:1.5}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid #343831;border-radius:999px;padding:8px 12px;font-size:12px}
 .toolbar{padding:18px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.search{padding:12px 14px;border:1px solid var(--line);border-radius:10px;min-width:250px;background:#fff}
 .grid{padding:0 18px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.photo{height:190px;background:#eef0eb;display:flex;align-items:center;justify-content:center;color:#90958c}.photo img{width:100%;height:100%;object-fit:cover}
-.pad{padding:15px}.sku{font-size:11px;color:#777}.status{float:right;font-size:10px;padding:5px 8px;border-radius:999px;background:#e9f8d5}.low_stock{background:#fff0bd}.sold_out{background:#eee}
-h3{margin:9px 0 10px}.meta{font-size:13px;color:#5e635c;line-height:1.7}.qty{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;margin:10px 0}.quote{display:block;text-align:center;background:#10120f;color:#fff;text-decoration:none;padding:12px;border-radius:9px;font-weight:700}
-.empty{grid-column:1/-1;background:#fff;border:1px dashed #cfd3ca;padding:34px;border-radius:14px;text-align:center;color:#6b7068}
-.adminBtn{position:fixed;left:16px;bottom:16px;background:#fff;border:1px solid #ddd;border-radius:999px;padding:10px 14px}
-.whatsapp{position:fixed;right:16px;bottom:16px;background:#25d366;color:white;text-decoration:none;border-radius:999px;padding:12px 16px;font-weight:700}
-dialog{border:0;border-radius:16px;width:min(92vw,620px);padding:0;box-shadow:0 20px 70px #0004}.modal{padding:22px}.modal input,.modal select{width:100%;padding:11px;margin:6px 0;border:1px solid #ddd;border-radius:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{padding:11px 14px;border:0;border-radius:9px;background:#10120f;color:#fff;font-weight:700}.secondary{background:#ecefe8;color:#111}.adminpanel{display:none}.adminpanel.show{display:block}.note{font-size:12px;color:#70756d;line-height:1.5}
-@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero{padding-top:28px}h1{font-size:30px}.row{grid-template-columns:1fr}}
+.pad{padding:15px}.sku{font-size:11px;color:#777}.status{float:right;font-size:10px;padding:5px 8px;border-radius:999px;background:#e9f8d5}.low_stock{background:#fff0bd}.sold_out{background:#eee}h3{margin:9px 0 10px}.meta{font-size:13px;color:#5e635c;line-height:1.7}.qty{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;margin:10px 0}.quote{display:block;text-align:center;background:#10120f;color:#fff;text-decoration:none;padding:12px;border-radius:9px;font-weight:700}.empty{grid-column:1/-1;background:#fff;border:1px dashed #cfd3ca;padding:34px;border-radius:14px;text-align:center;color:#6b7068}
+.whatsapp{position:fixed;right:16px;bottom:16px;background:#25d366;color:#fff;text-decoration:none;border-radius:999px;padding:12px 16px;font-weight:700}
+dialog{border:0;border-radius:16px;width:min(94vw,680px);padding:0;box-shadow:0 20px 70px #0004}.modal{padding:22px}.modal input,.modal select{width:100%;padding:11px;margin:6px 0;border:1px solid #ddd;border-radius:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{padding:11px 14px;border:0;border-radius:9px;background:#10120f;color:#fff;font-weight:700;margin:3px}.secondary{background:#ecefe8;color:#111}.danger{background:#a82323}.adminpanel{display:none}.adminpanel.show{display:block}.note{font-size:12px;color:#70756d;line-height:1.5}.admin-list{margin-top:20px;border-top:1px solid #ddd;padding-top:14px}.admin-item{padding:12px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center}.admin-item small{color:#777}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.lang{align-self:flex-end}h1{font-size:30px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+</head><body>
 <section class="hero"><div class="wrap">
-<div class="eyebrow">SOUTHERN CALIFORNIA • WHOLESALE</div>
-<h1>LA Wholesale Deals</h1>
-<p>Liquidación, sobrestock y oportunidades por lote. El inventario cambia rápidamente. Solicita una cotización con la cantidad que necesitas.</p>
-<div class="chips"><span class="chip">100+ unidades</span><span class="chip">Entrega local disponible</span><span class="chip">Inventario actualizado</span></div>
-</div></section>
-<div class="wrap">
-<div class="toolbar"><div><b>Disponible ahora</b><div style="font-size:12px;color:#777">Precios bajo cotización • Prices by quote</div></div><input id="search" class="search" placeholder="Buscar producto / Search"></div>
-<div id="grid" class="grid"><div class="empty">Conectando con inventario en vivo…</div></div>
-</div>
-
-<a class="whatsapp" href="https://wa.me/19543761704" target="_blank">WhatsApp</a>
+<div class="top"><div class="eyebrow">SOUTHERN CALIFORNIA • WHOLESALE</div><div class="lang"><button id="les" onclick="setLang('es')">Español</button><button id="len" onclick="setLang('en')">English</button><button id="lzh" onclick="setLang('zh')">中文</button></div></div>
+<h1>LA Wholesale Deals</h1><p id="heroText"></p><div id="chips" class="chips"></div></div></section>
+<div class="wrap"><div class="toolbar"><div><b id="availableTitle"></b><div id="quoteSub" style="font-size:12px;color:#777"></div></div><input id="search" class="search"></div><div id="grid" class="grid"></div></div>
+<a id="waFloat" class="whatsapp" href="https://wa.me/19543761704" target="_blank">WhatsApp</a>
 
 <dialog id="adminDialog"><div class="modal">
-<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Admin</h2><button class="secondary btn" onclick="adminDialog.close()">Cerrar</button></div>
-<div id="loginBox">
-<p class="note">V3 está conectado a Supabase. Inicia sesión para administrar inventario. La cuenta administradora se activa una sola vez durante la configuración.</p>
-<input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password">
-<div class="row"><button class="btn" onclick="login()">Login</button><button class="btn secondary" onclick="signup()">Crear cuenta inicial</button></div>
-<div id="authMsg" class="note" style="margin-top:10px"></div>
-</div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Admin</h2><button class="secondary btn" onclick="$('adminDialog').close()">Close</button></div>
+<div id="loginBox"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><button class="btn" onclick="login()">Login</button><div id="authMsg" class="note"></div></div>
 <div id="adminPanel" class="adminpanel">
-<p><b>Agregar producto</b></p>
+<p><b id="formTitle">Add Product</b></p><input id="editId" type="hidden">
 <input id="sku" placeholder="SKU / Product ID">
-<div class="row"><input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"></div>
-<div class="row"><input id="inventory" type="number" placeholder="Inventario"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
-<div class="row"><input id="productLocation" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option></select></div>
-<input id="image" type="file" accept="image/*">
-<button id="publishBtn" class="btn" onclick="saveProduct()">Publicar producto</button>
-<button class="btn secondary" onclick="logout()">Logout</button>
-<div id="adminMsg" class="note" style="margin-top:10px"></div>
-</div>
-</div></dialog>
+<input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"><input id="nameZh" placeholder="中文商品名称（可选）">
+<div class="row"><input id="inventory" type="number" placeholder="Inventory"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
+<div class="row"><input id="productLocation" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option><option value="hidden">Hidden</option></select></div>
+<input id="image" type="file" accept="image/*"><div class="note">编辑商品时不选新图片，会保留原图片。</div>
+<button id="publishBtn" class="btn" onclick="saveProduct()">Save / Publish</button><button id="cancelBtn" class="btn secondary" onclick="clearForm()" style="display:none">Cancel Edit</button><button class="btn secondary" onclick="logout()">Logout</button><div id="adminMsg" class="note"></div>
+<div class="admin-list"><b>Products</b><div id="adminProducts"></div></div>
+</div></div></dialog>
 
 <script>
-const SB_URL='https://offvnzvrupkcvvarucas.supabase.co';
-const SB_KEY='sb_publishable_-ZNWny-JsFdwnBNBfuSulg_fRSjyMRg';
-const db=window.supabase.createClient(SB_URL,SB_KEY);
-const WA='19543761704';
-let products=[];
-
+const SB_URL='https://offvnzvrupkcvvarucas.supabase.co',SB_KEY='sb_publishable_-ZNWny-JsFdwnBNBfuSulg_fRSjyMRg',db=window.supabase.createClient(SB_URL,SB_KEY),WA='19543761704';
+const $=id=>document.getElementById(id);let products=[],lang=localStorage.getItem('lang')||'es';
+const T={
+es:{hero:'Liquidación, sobrestock y oportunidades por lote. El inventario cambia rápidamente. Solicita una cotización con la cantidad que necesitas.',chips:['100+ unidades','Entrega local disponible','Inventario actualizado'],available:'Disponible ahora',sub:'Precios bajo cotización',search:'Buscar producto',stock:'Inventario',moq:'Pedido mínimo',delivery:'Entrega local disponible',quote:'SOLICITAR COTIZACIÓN',empty:'No hay productos disponibles.',photo:'Foto del producto',statuses:{available:'DISPONIBLE',low_stock:'POCAS UNIDADES',sold_out:'AGOTADO'}},
+en:{hero:'Liquidation, overstock and wholesale lot opportunities. Inventory changes quickly. Request a quote for the quantity you need.',chips:['100+ units','Local delivery available','Updated inventory'],available:'Available now',sub:'Prices by quote',search:'Search products',stock:'Inventory',moq:'Minimum order',delivery:'Local delivery available',quote:'REQUEST A QUOTE',empty:'No products available.',photo:'Product photo',statuses:{available:'AVAILABLE',low_stock:'LOW STOCK',sold_out:'SOLD OUT'}},
+zh:{hero:'南加州清仓、库存和批发整批货源。库存变化较快，请提交所需数量获取报价。',chips:['100件起批','可提供本地配送','库存持续更新'],available:'现货商品',sub:'价格请询价',search:'搜索商品',stock:'库存',moq:'最低订购量',delivery:'可提供本地配送',quote:'获取报价',empty:'目前没有可售商品。',photo:'商品图片',statuses:{available:'有货',low_stock:'库存较少',sold_out:'售罄'}}
+};
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-async function loadProducts(){
- const {data,error}=await db.from('products').select('*').neq('status','hidden').order('sort_order').order('created_at',{ascending:false});
- if(error){grid.innerHTML='<div class="empty">Inventario temporalmente no disponible.<br>'+esc(error.message)+'</div>';return}
- products=data||[]; render();
-}
-function render(){
- const q=search.value.toLowerCase().trim(); const list=products.filter(p=>(p.name_es+' '+(p.name_en||'')+' '+p.sku).toLowerCase().includes(q));
- grid.innerHTML=list.length?list.map(p=>{
-   const disabled=p.status==='sold_out'; const img=p.image_url?`<img src="${esc(p.image_url)}">`:'Foto del producto';
-   return `<article class="card"><div class="photo">${img}</div><div class="pad"><div><span class="sku">ITEM ${esc(p.sku)}</span><span class="status ${esc(p.status)}">${p.status.replace('_',' ').toUpperCase()}</span></div>
-   <h3>${esc(p.name_es)}${p.name_en?` / ${esc(p.name_en)}`:''}</h3>
-   <div class="meta">Inventario: <b>${p.inventory??p.inventory_label??'Consultar'}</b><br>Pedido mínimo: <b>${p.moq} pcs</b><br>${esc(p.location||'Southern California')}<br>${p.delivery_available?'Entrega local disponible':''}</div>
-   <input class="qty" id="q${p.id}" type="number" min="${p.moq}" placeholder="Cantidad / Quantity" ${disabled?'disabled':''}>
-   <a class="quote" href="#" onclick="quote(event,${p.id})" style="${disabled?'opacity:.4;pointer-events:none':''}">SOLICITAR COTIZACIÓN</a></div></article>`
- }).join(''):'<div class="empty">No hay productos disponibles.</div>';
-}
-function quote(e,id){e.preventDefault();const p=products.find(x=>x.id===id);const qty=document.getElementById('q'+id).value||p.moq;const msg=`Hola, me interesa el producto ${p.sku} - ${p.name_es}. Necesito ${qty} unidades. ¿Me puede mandar una cotización?`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank')}
-search.addEventListener('input',render);
-
-function setAdminSession(session){
- if(session?.user){loginBox.style.display='none';adminPanel.classList.add('show')}
- else{adminPanel.classList.remove('show');loginBox.style.display='block'}
-}
-function withTimeout(promise,ms,label){
- return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' tardó demasiado. Inténtalo otra vez.')),ms))]);
-}
-async function login(){
- try{
-   const {data,error}=await withTimeout(db.auth.signInWithPassword({email:email.value.trim(),password:password.value}),15000,'Login');
-   authMsg.textContent=error?error.message:'Login successful'; if(!error)setAdminSession(data.session);
- }catch(e){authMsg.textContent=e.message}
-}
-async function signup(){
- try{
-   const {error}=await withTimeout(db.auth.signUp({email:email.value.trim(),password:password.value}),15000,'Signup');
-   authMsg.textContent=error?error.message:'Cuenta creada. Revisa tu email para confirmar. Después vuelve y pulsa Login.';
- }catch(e){authMsg.textContent=e.message}
-}
+function nameFor(p){return lang==='zh'?(p.name_zh||p.name_en||p.name_es):lang==='en'?(p.name_en||p.name_es):(p.name_es||p.name_en)}
+function setLang(x){lang=x;localStorage.setItem('lang',x);applyLang();render()}
+function applyLang(){const t=T[lang];['es','en','zh'].forEach(x=>$('l'+x).classList.toggle('on',x===lang));$('heroText').textContent=t.hero;$('chips').innerHTML=t.chips.map(x=>'<span class="chip">'+esc(x)+'</span>').join('');$('availableTitle').textContent=t.available;$('quoteSub').textContent=t.sub;$('search').placeholder=t.search;document.documentElement.lang=lang}
+async function loadProducts(){const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});if(error){$('grid').innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}products=data||[];render();renderAdmin()}
+function render(){const t=T[lang],q=$('search').value.toLowerCase().trim(),list=products.filter(p=>p.active!==false&&p.status!=='hidden'&&(nameFor(p)+' '+(p.sku||'')).toLowerCase().includes(q));$('grid').innerHTML=list.length?list.map(p=>{const sold=p.status==='sold_out',img=p.image_url?`<img src="${esc(p.image_url)}">`:t.photo;return `<article class="card"><div class="photo">${img}</div><div class="pad"><span class="sku">ITEM ${esc(p.sku)}</span><span class="status ${esc(p.status)}">${esc(t.statuses[p.status]||p.status)}</span><h3>${esc(nameFor(p))}</h3><div class="meta">${t.stock}: <b>${p.inventory??'—'}</b><br>${t.moq}: <b>${p.moq||100} pcs</b><br>${esc(p.location||'Southern California')}<br>${p.delivery_available?t.delivery:''}</div><input class="qty" id="q${p.id}" type="number" min="${p.moq||100}" placeholder="${t.moq}" ${sold?'disabled':''}><a class="quote" href="#" onclick="quote(event,'${p.id}')" style="${sold?'opacity:.4;pointer-events:none':''}">${t.quote}</a></div></article>`}).join(''):'<div class="empty">'+t.empty+'</div>'}
+function quote(e,id){e.preventDefault();const p=products.find(x=>String(x.id)===String(id)),qty=$('q'+id).value||p.moq||100;let msg=lang==='es'?`Hola, me interesa ${p.sku} - ${nameFor(p)}. Necesito ${qty} unidades. ¿Me puede mandar una cotización?`:lang==='zh'?`你好，我对 ${p.sku} - ${nameFor(p)} 感兴趣，需要 ${qty} 件，请给我报价。`:`Hi, I'm interested in ${p.sku} - ${nameFor(p)}. I need ${qty} units. Please send me a quote.`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank')}
+$('search').addEventListener('input',render);
+function timeout(p,ms){return Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('Request timed out')),ms))])}
+function setAdminSession(s){$('loginBox').style.display=s?.user?'none':'block';$('adminPanel').classList.toggle('show',!!s?.user);if(s?.user)renderAdmin()}
+async function login(){try{const {data,error}=await timeout(db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value}),15000);$('authMsg').textContent=error?error.message:'Login successful';if(!error)setAdminSession(data.session)}catch(e){$('authMsg').textContent=e.message}}
 async function logout(){await db.auth.signOut();setAdminSession(null)}
-async function showAdmin(){const {data}=await db.auth.getSession();setAdminSession(data.session)}
-async function saveProduct(){
- const button=document.getElementById('publishBtn');
- if(!sku.value.trim()||!nameEs.value.trim()){adminMsg.textContent='SKU y Nombre Español son obligatorios.';return}
- adminMsg.textContent='Guardando…'; button.disabled=true;
- try{
-   let imageUrl=null; const f=image.files[0];
-   if(f){
-     adminMsg.textContent='Subiendo imagen…';
-     const path=`${Date.now()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-     const up=await withTimeout(db.storage.from('product-images').upload(path,f,{upsert:false}),30000,'La imagen');
-     if(up.error)throw new Error('Image: '+up.error.message);
-     imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl;
-   }
-   adminMsg.textContent='Guardando producto…';
-   const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:document.getElementById('productLocation').value.trim(),status:status.value,image_url:imageUrl,delivery_available:true,active:true};
-   const result=await withTimeout(db.from('products').insert(payload).select('id,sku').single(),20000,'Guardar producto');
-   if(result.error)throw result.error;
-   adminMsg.textContent='Publicado ✓';
-   sku.value=nameEs.value=nameEn.value=inventory.value=''; image.value='';
-   await loadProducts();
- }catch(e){adminMsg.textContent='Error: '+(e?.message||String(e))}
- finally{button.disabled=false}
-}
-db.auth.onAuthStateChange((_event,session)=>{
- // Supabase auth callbacks must stay synchronous; calling another auth method here can deadlock requests.
- setAdminSession(session);
-});
-loadProducts();
-if(new URLSearchParams(location.search).get('admin')==='1'){
-  window.addEventListener('load',()=>adminDialog.showModal());
-}
-</script>
-</body></html>
+function renderAdmin(){$('adminProducts').innerHTML=products.length?products.map(p=>`<div class="admin-item"><div><b>${esc(p.sku)}</b> ${esc(p.name_es||p.name_en||p.name_zh||'')}<br><small>Stock ${p.inventory??'—'} • MOQ ${p.moq||100} • ${esc(p.status)}</small></div><div><button class="btn secondary" onclick="editProduct('${p.id}')">Edit</button><button class="btn danger" onclick="deleteProduct('${p.id}')">Delete</button></div></div>`).join(''):'<div class="note">No products</div>'}
+function editProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;$('editId').value=p.id;$('sku').value=p.sku||'';$('nameEs').value=p.name_es||'';$('nameEn').value=p.name_en||'';$('nameZh').value=p.name_zh||'';$('inventory').value=p.inventory??'';$('moq').value=p.moq||100;$('productLocation').value=p.location||'Southern California';$('status').value=p.status||'available';$('formTitle').textContent='Edit Product';$('publishBtn').textContent='Save Changes';$('cancelBtn').style.display='inline-block';$('adminMsg').textContent='Editing '+p.sku}
+function clearForm(){$('editId').value='';$('sku').value='';$('nameEs').value='';$('nameEn').value='';$('nameZh').value='';$('inventory').value='';$('moq').value=100;$('productLocation').value='Southern California';$('status').value='available';$('image').value='';$('formTitle').textContent='Add Product';$('publishBtn').textContent='Save / Publish';$('cancelBtn').style.display='none';$('adminMsg').textContent=''}
+async function saveProduct(){const b=$('publishBtn'),m=$('adminMsg'),id=$('editId').value;if(!$('sku').value.trim()||!$('nameEs').value.trim()){m.textContent='SKU and Spanish name are required.';return}b.disabled=true;m.textContent='Saving…';try{let imageUrl=null,f=$('image').files[0];if(f){m.textContent='Uploading image…';const path=Date.now()+'-'+f.name.replace(/[^a-zA-Z0-9._-]/g,'_'),up=await timeout(db.storage.from('product-images').upload(path,f),30000);if(up.error)throw new Error('Image: '+up.error.message);imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl}const payload={sku:$('sku').value.trim(),name_es:$('nameEs').value.trim(),name_en:$('nameEn').value.trim()||null,name_zh:$('nameZh').value.trim()||null,inventory:$('inventory').value?Number($('inventory').value):null,moq:Number($('moq').value||100),location:$('productLocation').value.trim()||'Southern California',status:$('status').value,delivery_available:true,active:true};if(imageUrl)payload.image_url=imageUrl;const res=id?await timeout(db.from('products').update(payload).eq('id',id),20000):await timeout(db.from('products').insert(payload),20000);if(res.error)throw res.error;m.textContent=id?'Updated ✓':'Published ✓';clearForm();await loadProducts()}catch(e){m.textContent='Error: '+(e.message||e)}finally{b.disabled=false}}
+async function deleteProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!confirm('Delete '+(p?.sku||'this product')+'?'))return;const {error}=await db.from('products').delete().eq('id',id);if(error){$('adminMsg').textContent='Error: '+error.message;return}clearForm();await loadProducts()}
+db.auth.onAuthStateChange((_e,s)=>setAdminSession(s));applyLang();loadProducts();if(new URLSearchParams(location.search).get('admin')==='1')window.addEventListener('load',()=>$('adminDialog').showModal());
+</script></body></html>
