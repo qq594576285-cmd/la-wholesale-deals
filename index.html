@@ -30,7 +30,7 @@ dialog{border:0;border-radius:16px;width:min(94vw,680px);padding:0;box-shadow:0 
 <div id="adminPanel" class="adminpanel">
 <p><b id="formTitle">Add Product</b></p><input id="editId" type="hidden">
 <input id="sku" placeholder="SKU / Product ID">
-<input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"><input id="nameZh" placeholder="中文商品名称（可选）">
+<input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"><input id="nameZh" placeholder="中文商品名称（可选）"><button type="button" class="btn secondary" onclick="autoTranslateNames()">✨ Auto Translate / 自动翻译</button><div id="translateMsg" class="note">填写任意一种商品名称，然后点自动翻译；翻译后仍可手动修改。</div>
 <div class="row"><input id="inventory" type="number" placeholder="Inventory"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
 <div class="row"><input id="productLocation" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option><option value="hidden">Hidden</option></select></div>
 <input id="image" type="file" accept="image/*"><div class="note">编辑商品时不选新图片，会保留原图片。</div>
@@ -61,6 +61,32 @@ async function logout(){await db.auth.signOut();setAdminSession(null)}
 function renderAdmin(){$('adminProducts').innerHTML=products.length?products.map(p=>`<div class="admin-item"><div><b>${esc(p.sku)}</b> ${esc(p.name_es||p.name_en||p.name_zh||'')}<br><small>Stock ${p.inventory??'—'} • MOQ ${p.moq||100} • ${esc(p.status)}</small></div><div><button class="btn secondary" onclick="editProduct('${p.id}')">Edit</button><button class="btn danger" onclick="deleteProduct('${p.id}')">Delete</button></div></div>`).join(''):'<div class="note">No products</div>'}
 function editProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;$('editId').value=p.id;$('sku').value=p.sku||'';$('nameEs').value=p.name_es||'';$('nameEn').value=p.name_en||'';$('nameZh').value=p.name_zh||'';$('inventory').value=p.inventory??'';$('moq').value=p.moq||100;$('productLocation').value=p.location||'Southern California';$('status').value=p.status||'available';$('formTitle').textContent='Edit Product';$('publishBtn').textContent='Save Changes';$('cancelBtn').style.display='inline-block';$('adminMsg').textContent='Editing '+p.sku}
 function clearForm(){$('editId').value='';$('sku').value='';$('nameEs').value='';$('nameEn').value='';$('nameZh').value='';$('inventory').value='';$('moq').value=100;$('productLocation').value='Southern California';$('status').value='available';$('image').value='';$('formTitle').textContent='Add Product';$('publishBtn').textContent='Save / Publish';$('cancelBtn').style.display='none';$('adminMsg').textContent=''}
+
+async function translateText(text,source,target){
+ const url='https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(source)+'&tl='+encodeURIComponent(target)+'&dt=t&q='+encodeURIComponent(text);
+ const r=await timeout(fetch(url),12000);
+ if(!r.ok)throw new Error('Translation service unavailable');
+ const j=await r.json();
+ return (j[0]||[]).map(x=>x[0]||'').join('').trim();
+}
+async function autoTranslateNames(){
+ const es=$('nameEs'),en=$('nameEn'),zh=$('nameZh'),m=$('translateMsg');
+ let source='',text='';
+ if(zh.value.trim()){source='zh-CN';text=zh.value.trim()}
+ else if(en.value.trim()){source='en';text=en.value.trim()}
+ else if(es.value.trim()){source='es';text=es.value.trim()}
+ else{m.textContent='请先填写中文、English 或 Español 其中一个商品名称。';return}
+ m.textContent='Translating… / 正在翻译…';
+ try{
+   const jobs=[];
+   if(source!=='es'&&!es.value.trim())jobs.push(translateText(text,source,'es').then(v=>es.value=v));
+   if(source!=='en'&&!en.value.trim())jobs.push(translateText(text,source,'en').then(v=>en.value=v));
+   if(source!=='zh-CN'&&!zh.value.trim())jobs.push(translateText(text,source,'zh-CN').then(v=>zh.value=v));
+   await Promise.all(jobs);
+   m.textContent='翻译完成 ✓ 请检查后再发布。';
+ }catch(e){m.textContent='自动翻译暂时失败，请稍后重试或手动填写。'}
+}
+
 async function saveProduct(){const b=$('publishBtn'),m=$('adminMsg'),id=$('editId').value;if(!$('sku').value.trim()||!$('nameEs').value.trim()){m.textContent='SKU and Spanish name are required.';return}b.disabled=true;m.textContent='Saving…';try{let imageUrl=null,f=$('image').files[0];if(f){m.textContent='Uploading image…';const path=Date.now()+'-'+f.name.replace(/[^a-zA-Z0-9._-]/g,'_'),up=await timeout(db.storage.from('product-images').upload(path,f),30000);if(up.error)throw new Error('Image: '+up.error.message);imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl}const payload={sku:$('sku').value.trim(),name_es:$('nameEs').value.trim(),name_en:$('nameEn').value.trim()||null,name_zh:$('nameZh').value.trim()||null,inventory:$('inventory').value?Number($('inventory').value):null,moq:Number($('moq').value||100),location:$('productLocation').value.trim()||'Southern California',status:$('status').value,delivery_available:true,active:true};if(imageUrl)payload.image_url=imageUrl;const res=id?await timeout(db.from('products').update(payload).eq('id',id),20000):await timeout(db.from('products').insert(payload),20000);if(res.error)throw res.error;m.textContent=id?'Updated ✓':'Published ✓';clearForm();await loadProducts()}catch(e){m.textContent='Error: '+(e.message||e)}finally{b.disabled=false}}
 async function deleteProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!confirm('Delete '+(p?.sku||'this product')+'?'))return;const {error}=await db.from('products').delete().eq('id',id);if(error){$('adminMsg').textContent='Error: '+error.message;return}clearForm();await loadProducts()}
 db.auth.onAuthStateChange((_e,s)=>setAdminSession(s));applyLang();loadProducts();if(new URLSearchParams(location.search).get('admin')==='1')window.addEventListener('load',()=>$('adminDialog').showModal());
