@@ -47,7 +47,7 @@ dialog{border:0;border-radius:16px;width:min(92vw,620px);padding:0;box-shadow:0 
 <input id="sku" placeholder="SKU / Product ID">
 <div class="row"><input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"></div>
 <div class="row"><input id="inventory" type="number" placeholder="Inventario"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
-<div class="row"><input id="location" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option></select></div>
+<div class="row"><input id="productLocation" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option></select></div>
 <input id="image" type="file" accept="image/*">
 <button id="publishBtn" class="btn" onclick="saveProduct()">Publicar producto</button>
 <button class="btn secondary" onclick="logout()">Logout</button>
@@ -117,7 +117,7 @@ async function saveProduct(){
      imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl;
    }
    adminMsg.textContent='Guardando producto…';
-   const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:location.value.trim(),status:status.value,image_url:imageUrl,delivery_available:true,active:true};
+   const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:document.getElementById('productLocation').value.trim(),status:status.value,image_url:imageUrl,delivery_available:true,active:true};
    const result=await withTimeout(db.from('products').insert(payload).select('id,sku').single(),20000,'Guardar producto');
    if(result.error)throw result.error;
    adminMsg.textContent='Publicado ✓';
