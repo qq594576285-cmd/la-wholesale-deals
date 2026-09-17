@@ -47,9 +47,9 @@ dialog{border:0;border-radius:16px;width:min(92vw,620px);padding:0;box-shadow:0 
 <input id="sku" placeholder="SKU / Product ID">
 <div class="row"><input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"></div>
 <div class="row"><input id="inventory" type="number" placeholder="Inventario"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
-<div class="row"><input id="location" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option><option value="hidden">Hidden</option></select></div>
+<div class="row"><input id="location" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option></select></div>
 <input id="image" type="file" accept="image/*">
-<button class="btn" onclick="saveProduct()">Publicar producto</button>
+<button id="publishBtn" class="btn" onclick="saveProduct()">Publicar producto</button>
 <button class="btn secondary" onclick="logout()">Logout</button>
 <div id="adminMsg" class="note" style="margin-top:10px"></div>
 </div>
@@ -82,30 +82,54 @@ function render(){
 function quote(e,id){e.preventDefault();const p=products.find(x=>x.id===id);const qty=document.getElementById('q'+id).value||p.moq;const msg=`Hola, me interesa el producto ${p.sku} - ${p.name_es}. Necesito ${qty} unidades. ¿Me puede mandar una cotización?`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank')}
 search.addEventListener('input',render);
 
+function setAdminSession(session){
+ if(session?.user){loginBox.style.display='none';adminPanel.classList.add('show')}
+ else{adminPanel.classList.remove('show');loginBox.style.display='block'}
+}
+function withTimeout(promise,ms,label){
+ return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' tardó demasiado. Inténtalo otra vez.')),ms))]);
+}
 async function login(){
- const {error}=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});
- authMsg.textContent=error?error.message:'Login successful'; if(!error) showAdmin();
+ try{
+   const {data,error}=await withTimeout(db.auth.signInWithPassword({email:email.value.trim(),password:password.value}),15000,'Login');
+   authMsg.textContent=error?error.message:'Login successful'; if(!error)setAdminSession(data.session);
+ }catch(e){authMsg.textContent=e.message}
 }
 async function signup(){
- const {error}=await db.auth.signUp({email:email.value.trim(),password:password.value});
- authMsg.textContent=error?error.message:'Cuenta creada. Revisa tu email para confirmar. Después vuelve y pulsa Login.';
+ try{
+   const {error}=await withTimeout(db.auth.signUp({email:email.value.trim(),password:password.value}),15000,'Signup');
+   authMsg.textContent=error?error.message:'Cuenta creada. Revisa tu email para confirmar. Después vuelve y pulsa Login.';
+ }catch(e){authMsg.textContent=e.message}
 }
-async function logout(){await db.auth.signOut();adminPanel.classList.remove('show');loginBox.style.display='block'}
-async function showAdmin(){const {data:{user}}=await db.auth.getUser();if(user){loginBox.style.display='none';adminPanel.classList.add('show')}}
+async function logout(){await db.auth.signOut();setAdminSession(null)}
+async function showAdmin(){const {data}=await db.auth.getSession();setAdminSession(data.session)}
 async function saveProduct(){
- adminMsg.textContent='Guardando…';
- let imageUrl=null; const f=image.files[0];
- if(f){
-   const path=`${Date.now()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-   const up=await db.storage.from('product-images').upload(path,f);
-   if(up.error){adminMsg.textContent='Image: '+up.error.message;return}
-   imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl;
- }
- const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:location.value.trim(),status:status.value,image_url:imageUrl,delivery_available:true};
- const {error}=await db.from('products').insert(payload);
- adminMsg.textContent=error?error.message:'Publicado ✓'; if(!error){await loadProducts();sku.value=nameEs.value=nameEn.value=inventory.value='';image.value=''}
+ const button=document.getElementById('publishBtn');
+ if(!sku.value.trim()||!nameEs.value.trim()){adminMsg.textContent='SKU y Nombre Español son obligatorios.';return}
+ adminMsg.textContent='Guardando…'; button.disabled=true;
+ try{
+   let imageUrl=null; const f=image.files[0];
+   if(f){
+     adminMsg.textContent='Subiendo imagen…';
+     const path=`${Date.now()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+     const up=await withTimeout(db.storage.from('product-images').upload(path,f,{upsert:false}),30000,'La imagen');
+     if(up.error)throw new Error('Image: '+up.error.message);
+     imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl;
+   }
+   adminMsg.textContent='Guardando producto…';
+   const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:location.value.trim(),status:status.value,image_url:imageUrl,delivery_available:true,active:true};
+   const result=await withTimeout(db.from('products').insert(payload).select('id,sku').single(),20000,'Guardar producto');
+   if(result.error)throw result.error;
+   adminMsg.textContent='Publicado ✓';
+   sku.value=nameEs.value=nameEn.value=inventory.value=''; image.value='';
+   await loadProducts();
+ }catch(e){adminMsg.textContent='Error: '+(e?.message||String(e))}
+ finally{button.disabled=false}
 }
-db.auth.onAuthStateChange((_e,s)=>{if(s)showAdmin()});
+db.auth.onAuthStateChange((_event,session)=>{
+ // Supabase auth callbacks must stay synchronous; calling another auth method here can deadlock requests.
+ setAdminSession(session);
+});
 loadProducts();
 if(new URLSearchParams(location.search).get('admin')==='1'){
   window.addEventListener('load',()=>adminDialog.showModal());
