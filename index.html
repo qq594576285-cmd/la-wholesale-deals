@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LA Wholesale Deals</title>
+<style>
+:root{--ink:#10120f;--muted:#686d65;--line:#e5e8e1;--green:#9ad64d;--bg:#f7f8f4}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg)}
+.hero{background:#10120f;color:#fff;padding:34px 18px}.wrap{max-width:1100px;margin:auto}.eyebrow{font-size:11px;letter-spacing:2px;color:#b8ec74;font-weight:700}
+h1{margin:8px 0 8px;font-size:34px}.hero p{color:#c8cdc4;max-width:680px;line-height:1.5}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid #343831;border-radius:999px;padding:8px 12px;font-size:12px}
+.toolbar{padding:18px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.search{padding:12px 14px;border:1px solid var(--line);border-radius:10px;min-width:250px;background:#fff}
+.grid{padding:0 18px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.photo{height:190px;background:#eef0eb;display:flex;align-items:center;justify-content:center;color:#90958c}.photo img{width:100%;height:100%;object-fit:cover}
+.pad{padding:15px}.sku{font-size:11px;color:#777}.status{float:right;font-size:10px;padding:5px 8px;border-radius:999px;background:#e9f8d5}.low_stock{background:#fff0bd}.sold_out{background:#eee}
+h3{margin:9px 0 10px}.meta{font-size:13px;color:#5e635c;line-height:1.7}.qty{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;margin:10px 0}.quote{display:block;text-align:center;background:#10120f;color:#fff;text-decoration:none;padding:12px;border-radius:9px;font-weight:700}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #cfd3ca;padding:34px;border-radius:14px;text-align:center;color:#6b7068}
+.adminBtn{position:fixed;left:16px;bottom:16px;background:#fff;border:1px solid #ddd;border-radius:999px;padding:10px 14px}
+.whatsapp{position:fixed;right:16px;bottom:16px;background:#25d366;color:white;text-decoration:none;border-radius:999px;padding:12px 16px;font-weight:700}
+dialog{border:0;border-radius:16px;width:min(92vw,620px);padding:0;box-shadow:0 20px 70px #0004}.modal{padding:22px}.modal input,.modal select{width:100%;padding:11px;margin:6px 0;border:1px solid #ddd;border-radius:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{padding:11px 14px;border:0;border-radius:9px;background:#10120f;color:#fff;font-weight:700}.secondary{background:#ecefe8;color:#111}.adminpanel{display:none}.adminpanel.show{display:block}.note{font-size:12px;color:#70756d;line-height:1.5}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero{padding-top:28px}h1{font-size:30px}.row{grid-template-columns:1fr}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">SOUTHERN CALIFORNIA • WHOLESALE</div>
+<h1>LA Wholesale Deals</h1>
+<p>Liquidación, sobrestock y oportunidades por lote. El inventario cambia rápidamente. Solicita una cotización con la cantidad que necesitas.</p>
+<div class="chips"><span class="chip">100+ unidades</span><span class="chip">Entrega local disponible</span><span class="chip">Inventario actualizado</span></div>
+</div></section>
+<div class="wrap">
+<div class="toolbar"><div><b>Disponible ahora</b><div style="font-size:12px;color:#777">Precios bajo cotización • Prices by quote</div></div><input id="search" class="search" placeholder="Buscar producto / Search"></div>
+<div id="grid" class="grid"><div class="empty">Conectando con inventario en vivo…</div></div>
+</div>
+
+<a class="whatsapp" href="https://wa.me/19543761704" target="_blank">WhatsApp</a>
+
+<dialog id="adminDialog"><div class="modal">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Admin</h2><button class="secondary btn" onclick="adminDialog.close()">Cerrar</button></div>
+<div id="loginBox">
+<p class="note">V3 está conectado a Supabase. Inicia sesión para administrar inventario. La cuenta administradora se activa una sola vez durante la configuración.</p>
+<input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password">
+<div class="row"><button class="btn" onclick="login()">Login</button><button class="btn secondary" onclick="signup()">Crear cuenta inicial</button></div>
+<div id="authMsg" class="note" style="margin-top:10px"></div>
+</div>
+<div id="adminPanel" class="adminpanel">
+<p><b>Agregar producto</b></p>
+<input id="sku" placeholder="SKU / Product ID">
+<div class="row"><input id="nameEs" placeholder="Nombre Español"><input id="nameEn" placeholder="English name"></div>
+<div class="row"><input id="inventory" type="number" placeholder="Inventario"><input id="moq" type="number" value="100" placeholder="MOQ"></div>
+<div class="row"><input id="location" value="Southern California" placeholder="Location"><select id="status"><option value="available">Available</option><option value="low_stock">Low Stock</option><option value="sold_out">Sold Out</option><option value="hidden">Hidden</option></select></div>
+<input id="image" type="file" accept="image/*">
+<button class="btn" onclick="saveProduct()">Publicar producto</button>
+<button class="btn secondary" onclick="logout()">Logout</button>
+<div id="adminMsg" class="note" style="margin-top:10px"></div>
+</div>
+</div></dialog>
+
+<script>
+const SB_URL='https://offvnzvrupkcvvarucas.supabase.co';
+const SB_KEY='sb_publishable_-ZNWny-JsFdwnBNBfuSulg_fRSjyMRg';
+const db=window.supabase.createClient(SB_URL,SB_KEY);
+const WA='19543761704';
+let products=[];
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function loadProducts(){
+ const {data,error}=await db.from('products').select('*').neq('status','hidden').order('sort_order').order('created_at',{ascending:false});
+ if(error){grid.innerHTML='<div class="empty">Inventario temporalmente no disponible.<br>'+esc(error.message)+'</div>';return}
+ products=data||[]; render();
+}
+function render(){
+ const q=search.value.toLowerCase().trim(); const list=products.filter(p=>(p.name_es+' '+(p.name_en||'')+' '+p.sku).toLowerCase().includes(q));
+ grid.innerHTML=list.length?list.map(p=>{
+   const disabled=p.status==='sold_out'; const img=p.image_url?`<img src="${esc(p.image_url)}">`:'Foto del producto';
+   return `<article class="card"><div class="photo">${img}</div><div class="pad"><div><span class="sku">ITEM ${esc(p.sku)}</span><span class="status ${esc(p.status)}">${p.status.replace('_',' ').toUpperCase()}</span></div>
+   <h3>${esc(p.name_es)}${p.name_en?` / ${esc(p.name_en)}`:''}</h3>
+   <div class="meta">Inventario: <b>${p.inventory??p.inventory_label??'Consultar'}</b><br>Pedido mínimo: <b>${p.moq} pcs</b><br>${esc(p.location||'Southern California')}<br>${p.delivery_available?'Entrega local disponible':''}</div>
+   <input class="qty" id="q${p.id}" type="number" min="${p.moq}" placeholder="Cantidad / Quantity" ${disabled?'disabled':''}>
+   <a class="quote" href="#" onclick="quote(event,${p.id})" style="${disabled?'opacity:.4;pointer-events:none':''}">SOLICITAR COTIZACIÓN</a></div></article>`
+ }).join(''):'<div class="empty">No hay productos disponibles.</div>';
+}
+function quote(e,id){e.preventDefault();const p=products.find(x=>x.id===id);const qty=document.getElementById('q'+id).value||p.moq;const msg=`Hola, me interesa el producto ${p.sku} - ${p.name_es}. Necesito ${qty} unidades. ¿Me puede mandar una cotización?`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank')}
+search.addEventListener('input',render);
+
+async function login(){
+ const {error}=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+ authMsg.textContent=error?error.message:'Login successful'; if(!error) showAdmin();
+}
+async function signup(){
+ const {error}=await db.auth.signUp({email:email.value.trim(),password:password.value});
+ authMsg.textContent=error?error.message:'Cuenta creada. Revisa tu email para confirmar. Después vuelve y pulsa Login.';
+}
+async function logout(){await db.auth.signOut();adminPanel.classList.remove('show');loginBox.style.display='block'}
+async function showAdmin(){const {data:{user}}=await db.auth.getUser();if(user){loginBox.style.display='none';adminPanel.classList.add('show')}}
+async function saveProduct(){
+ adminMsg.textContent='Guardando…';
+ let imageUrl=null; const f=image.files[0];
+ if(f){
+   const path=`${Date.now()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+   const up=await db.storage.from('product-images').upload(path,f);
+   if(up.error){adminMsg.textContent='Image: '+up.error.message;return}
+   imageUrl=db.storage.from('product-images').getPublicUrl(path).data.publicUrl;
+ }
+ const payload={sku:sku.value.trim(),name_es:nameEs.value.trim(),name_en:nameEn.value.trim()||null,inventory:inventory.value?Number(inventory.value):null,moq:Number(moq.value||100),location:location.value.trim(),status:status.value,image_url:imageUrl,delivery_available:true};
+ const {error}=await db.from('products').insert(payload);
+ adminMsg.textContent=error?error.message:'Publicado ✓'; if(!error){await loadProducts();sku.value=nameEs.value=nameEn.value=inventory.value='';image.value=''}
+}
+db.auth.onAuthStateChange((_e,s)=>{if(s)showAdmin()});
+loadProducts();
+if(new URLSearchParams(location.search).get('admin')==='1'){
+  window.addEventListener('load',()=>adminDialog.showModal());
+}
+</script>
+</body></html>
